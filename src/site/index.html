@@ -8,11 +8,11 @@ stickyheader: true
   <div class="container">
     <div class="row">
       <div class="col-sm-offset-2 col-sm-8 text-center">
-        <h2><strong>Vert.x</strong> is a tool-kit for building <strong>reactive</strong> applications on the <strong>JVM</strong>.</h2>
+        <h2><strong>Vert.x</strong> 是一个基于 <strong>JVM</strong> 构建 <strong>reactive</strong> 应用的工具集.</h2>
         <div class="buttons">
           <a class="btn btn-default btn-lg btn-transparent"
              href="{{ site_url }}download/" role="button">
-            {% icon "install" %} Download v{{ project_version }}</a><br>
+            {% icon "install" %} 下载 v{{ project_version }}</a><br>
           <span class="github-btn">
             <iframe src="https://ghbtns.com/github-btn.html?user=eclipse&amp;repo=vert.x&amp;type=star&amp;count=true&amp;size=large"
                   frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
@@ -26,9 +26,9 @@ stickyheader: true
 <div class="container highlight highlight-scale">
   <div class="row">
     <div class="col-sm-6">
-      <h2>Scale</h2>
-      <p>Vert.x is <em>event driven</em> and <em>non blocking</em>. This means your app can handle a lot of concurrency
-        using a small number of kernel threads. Vert.x lets your app scale with minimal hardware.</p>
+      <h2>可伸缩性</h2>
+      <p>Vert.x 是 <em>事件驱动</em> , <em>无阻塞</em>的. 这意味着你的应用可以使用少量核心线程就能进行大量的并发处理.
+        Vert.x 使你的应用可以使用最少的硬件进行扩展.</p>
     </div>
 
     <div class="col-sm-offset-1 col-sm-5 text-right">
@@ -109,12 +109,11 @@ shared class Server() extends Verticle() {
         </div>
       </div>
       <div class="col-sm-6 text-right">
-        <h2>Polyglot</h2>
-        <p>You can use Vert.x with multiple languages including <strong>Java</strong>, <strong>JavaScript</strong>,
+        <h2>多语言</h2>
+        <p>你可以使用多种语言编写 Vert.x 应用,包括 <strong>Java</strong>, <strong>JavaScript</strong>,
           <strong>Groovy</strong>, <strong>Ruby</strong>, and <strong>Ceylon</strong>.</p>
-        <p>Vert.x doesn't preach about what language is <em>best</em> &mdash; you choose the languages <em>you</em> want
-          based on the task at hand and the skill-set of your team.</p>
-        <p>We provide <em>idiomatic</em> APIs for every language that Vert.x supports.</p>
+        <p>Vert.x 不宣扬哪种语言<em>最好</em>. 你可以根据当前的任务和<em>你的</em>团队的技能栈来选择语言.</p>
+        <p>我们为 Vert.x 支持的每种语言都提供了<em>通用的</em> APIs.</p>
       </div>
     </div>
   </div>
@@ -149,29 +148,28 @@ shared class Server() extends Verticle() {
   <div class="container">
     <div class="row">
       <div class="col-sm-6">
-        <h2>Vert.x is <em>fun</em></h2>
-        <p>Enjoy being a developer again.</p>
-        <p>Unlike restrictive traditional application containers, Vert.x gives you
-          incredible power and agility to create compelling, scalable, 21st century applications the way you want to,
-          with a minimum of fuss, in the language you want.</p>
+        <h2>Vert.x 是<em>有趣的</em></h2>
+        <p>享受再次成为开发人员.</p>
+        <p>不像传统的有约束的应用容器, Vert.x 带来难以置信的力量和敏捷性,让你可以用希望的语言
+          来创建引人注目的,可扩展的21世纪应用,将困扰最小化.</p>
       </div>
       <div class="col-sm-6 highlight-fun-right">
         <ul>
-          <li><p>Vert.x is <em>lightweight</em> - Vert.x core is around 650kB in size.</p></li>
-          <li><p>Vert.x is <em>fast</em>. Here are some independent
-            <a href="https://www.techempower.com/benchmarks/#section=data-r8&hw=i7&test=plaintext">numbers</a>.</p></li>
-          <li><p>Vert.x is <em>not an application server</em>. There's no monolithic Vert.x instance into which you deploy applications.
-            You just run your apps wherever you want to.</p></li>
-          <li><p>Vert.x is <em>modular</em> - when you need more bits just add the bits you need and nothing more.</p></li>
-          <li><p>Vert.x is <em>simple but not simplistic</em>. Vert.x allows you to create powerful apps, simply.</p></li>
-          <li><p>Vert.x is an ideal choice for creating light-weight, high-performance, <em>microservices</em>.</p></li>
+          <li><p>Vert.x 是<em>轻量级的</em> - Vert.x core 大约 650kB 大小.</p></li>
+          <li><p>Vert.x 是<em>快速的</em>. 这里是第三方的
+            <a href="https://www.techempower.com/benchmarks/#section=data-r8&hw=i7&test=plaintext">Benchmarks</a>.</p></li>
+          <li><p>Vert.x 不是<em>应用服务器</em>. 在你部署的应用不存在作为整体的 Vert.x 实例.
+            你可以在任何地方运行你的应用.</p></li>
+          <li><p>Vert.x 是<em>模块化的</em> - 当你需要更多的话直接增加就可以了.</p></li>
+          <li><p>Vert.x 是<em>简单的但不是过分单纯的</em>. Vert.x 允许你简单地创建强大的应用程序.</p></li>
+          <li><p>Vert.x 是创建轻量级,高性能, <em>微服务</em>的理想选择.</p></li>
         </ul>
       </div>
     </div>
 
     <div class="row highlight highlight-stack">
       <div class="col-sm-12 text-center">
-        <p>Have a private enquiry about Vert.x? Please <a href="mailto:vertx-enquiries@googlegroups.com">contact us</a>.</p>
+        <p>想私下询问 Vert.x? 请 <a href="mailto:vertx-enquiries@googlegroups.com">联系我们</a>.</p>
       </div>
     </div>
   </div>
@@ -181,7 +179,7 @@ shared class Server() extends Verticle() {
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        <h2>Who's using Vert.x?</h2>
+        <h2>谁在使用 Vert.x?</h2>
         <!-- iterate over logos and generate rows and cols for different resolutions -->
         {% set res = {"xs": 1, "sm": 2, "md": 3, "lg": 4} %}
         {% for cols in res %}
@@ -204,7 +202,7 @@ shared class Server() extends Verticle() {
 
         <div class="row">
           <div class="col-sm-12 wanttobelisted">
-            <a class="btn btn-default btn-md btn-transparent" href="{{ site_url }}whos_using" role="button">{% icon "list" %} More &hellip;</a><br>
+            <a class="btn btn-default btn-md btn-transparent" href="{{ site_url }}whos_using" role="button">{% icon "list" %} 更多 &hellip;</a><br>
           </div>
         </div>
       </div>

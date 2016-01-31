@@ -1,8 +1,9 @@
 ---
-title: My first Vert.x 3 Application
+title: 我的第一个 Vert.x 3 应用
 template: post.html
 date: 2015-07-14
 author: cescoffier
+translator: SidneyXu
 ---
 
 Let's say, you heard someone saying that Vert.x is _awesome_. Ok great, but you may want to try it by yourself. Well, the next natural question is "where do I start ?". This post is a good starting point. It shows how is built a very simple vert.x application (nothing fancy), how it is tested and how it is packaged and executed. So, everything you need to know before building your own groundbreaking application.
