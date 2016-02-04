@@ -1,41 +1,36 @@
-= Vert.x Core Manual
+= Vert.x Core 手册
 :toc: left
 
-At the heart of Vert.x is a set of Java APIs that we call *Vert.x Core*
+Vert.x 的核心是一系列被称作为 *Vert.x Core* 的 Java APIs.
 
 https://github.com/eclipse/vert.x[Repository].
 
-Vert.x core provides functionality for things like:
+Vert.x core 提供了以下功能:
 
-* Writing TCP clients and servers
-* Writing HTTP clients and servers including support for WebSockets
-* The Event bus
-* Shared data - local maps and clustered distributed maps
-* Periodic and delayed actions
-* Deploying and undeploying Verticles
+* 编写 TCP 客户端和服务端
+* 编写 HTTP 客户端和服务端包括 WebSockets
+* 事件总线
+* 数据共享 - 本地映射和分布式集群映射
+* 定时和延迟行为
+* 加载和卸载 Verticles
 * Datagram Sockets
-* DNS client
-* File system access
-* High availability
-* Clustering
+* DNS 客户端
+* 文件系统访问
+* 高可用性
+* 集群
 
-The functionality in core is fairly low level - you won't find stuff like database access, authorisation or high level
-web functionality here - that kind of stuff you'll find in *Vert.x ext* (extensions).
+core 中的功能是相当底层的 - 你无法在这里找到像数据库访问,权限认证或高层次的 web 功能.这些功能都包含在 *Vert.x ext* (扩展).
 
-Vert.x core is small and lightweight. You just use the parts you want. It's also entirely embeddable in your
-existing applications - we don't force you to structure your applications in a special way just so you can use
-Vert.x.
+Vert.x core 是体积小,轻量级的.你只需使用你需要的.它可以完全嵌入当你的现有应用中 - 我们不会强迫你只有更改应用的结构才能使用 Vert.x.
 
-You can use core from any of the other languages that Vert.x supports. But here'a a cool bit - we don't force
-you to use the Java API directly from, say, JavaScript or Ruby - after all, different languages have different conventions
-and idioms, and it would be odd to force Java idioms on Ruby developers (for example).
-Instead, we automatically generate an *idiomatic* equivalent of the core Java APIs for each language.
+你可以使用 Vert.x 支持的其它语言来使用 core.更酷的是,我们不会强迫你直接访问 Java API,毕竟不同的语言有不同的约定和风格.举例来说,强制
+Ruby 开发人员使用 Java 的约定是很奇怪的.作为替代,我们为每个语言自动生成了相当于 Java APIs 的*符合每个语言习惯*的 API.
 
-From now on we'll just use the word *core* to refer to Vert.x core.
+从现在开始我们使用 *core* 来代表 Vert.x core.
 
 include::override/dependencies.adoc[]
 
-Let's discuss the different concepts and features in core.
+让我们讨论 core 中的不同概念和特性.
 
 == In the beginning there was Vert.x
 
@@ -60,17 +55,17 @@ If you're using Verticles
 NOTE: Most applications will only need a single Vert.x instance, but it's possible to create multiple Vert.x instances if you
 require, for example, isolation between the event bus or different groups of servers and clients.
 
-=== Specifying options when creating a Vertx object
+=== 创建 Vertx 实例时指定配置
 
-When creating a Vertx object you can also specify options if the defaults aren't right for you:
+当默认配置无法满足你时,你可以在创建 Vertx 实例时自行指定配置
 
 [source,java]
 ----
 Vertx vertx = Vertx.vertx(new VertxOptions().setWorkerPoolSize(40));
 ----
 
-The `link:../../apidocs/io/vertx/core/VertxOptions.html[VertxOptions]` object has many settings and allows you to configure things like clustering,
-high availability, pool sizes and various other settings. The Javadoc describes all the settings in detail.
+`link:../../apidocs/io/vertx/core/VertxOptions.html[VertxOptions]` 对象包含许多选项,包括集群,
+ 高可用性,线程池大小和其它选项. Javadoc 详细描述了这些选项.
 
 === Creating a clustered Vert.x object
 
@@ -105,36 +100,34 @@ response.write("some text");
 response.end();
 ----
 
-== Don't call us, we'll call you.
+== 不要调用我们,我们会调用你.
 
-The Vert.x APIs are largely _event driven_. This means that when things happen in Vert.x that you are interested in,
-Vert.x will call you by sending you events.
+Vert.x APIs 大都是 _事件驱动_的.这意味着当 Vert.x 发生了某件你感兴趣的事情,Vert.x 会通过向你发送事件来通知你.
 
-Some example events are:
+一些事件的示例:
 
-* a timer has fired
-* some data has arrived on a socket,
-* some data has been read from disk
-* an exception has occurred
-* an HTTP server has received a request
+* 一个定时器被触发了
+* socket 接收到了数据
+* 从磁盘上读取了一些数据
+* 发生了一个异常
+* HTTP 服务端接收到了一个请求
 
-You handle events by providing _handlers_ to the Vert.x APIs. For example to receive a timer event every second you
-would do:
+你通过向 Vert.x APIs 提供 _handlers_ 来处理事件.举例来说,为了每秒接收一个定时器的事件你需要:
 
 [source,java]
 ----
 vertx.setPeriodic(1000, id -> {
-  // This handler will get called every second
+  // 这个 handler 每秒都会被调用
   System.out.println("timer fired!");
 });
 ----
 
-Or to receive an HTTP request:
+或者接收一个 HTTP 请求:
 
 [source,java]
 ----
 server.requestHandler(request -> {
-  // This handler will be called every time an HTTP request is received at the server
+  // 每当一个 HTTP 请求到达服务端时该 handler 都会被调用
   request.response().end("hello world!");
 });
 ----
@@ -143,7 +136,7 @@ Some time later when Vert.x has an event to pass to your handler Vert.x will cal
 
 This leads us to some important concepts in Vert.x:
 
-== Don't block me!
+== 不要阻塞我!
 
 With very few exceptions (i.e. some file system operations ending in 'Sync'), none of the APIs in Vert.x block the calling thread.
 
@@ -169,7 +162,7 @@ Threads have overhead in terms of the memory they require (e.g. for their stack)
 
 For the levels of concurrency required in many modern applications, a blocking approach just doesn't scale.
 
-== Reactor and Multi-Reactor
+== Reactor 和 Multi-Reactor
 
 We mentioned before that Vert.x APIs are event driven - Vert.x passes events to handlers when they are available.
 
@@ -204,7 +197,8 @@ concurrently, and in most cases (with the exception of <<worker_verticles, worke
 using the *exact same event loop*.
 
 [[golden_rule]]
-== The Golden Rule - Don't Block the Event Loop
+
+== 黄金法则 - 不要阻塞事件循环 (Event Loop)
 
 We already know that the Vert.x APIs are non blocking and won't block the event loop, but that's not much help if
 you block the event loop *yourself* in a handler.
@@ -214,10 +208,10 @@ event loops in Vertx instance then your application will grind to a complete hal
 
 So don't do it! *You have been warned*.
 
-Examples of blocking include:
+阻塞的示例:
 
 * +Thread.sleep()+
-* Waiting on a lock
+* 等待一个 lock
 * Waiting on a mutex or monitor (e.g. synchronized section)
 * Doing a long lived database operation and waiting for a result
 * Doing a complex calculation that takes some significant time.
@@ -247,6 +241,7 @@ If you want to turn of these warnings or change the settings, you can do that in
 `link:../../apidocs/io/vertx/core/VertxOptions.html[VertxOptions]` object before creating the Vertx object.
 
 [[blocking_code]]
+
 == Running blocking code
 
 In a perfect world, there will be no war or hunger, all APIs will be written asynchronously and bunny rabbits will
@@ -313,9 +308,9 @@ time. The different verticle instances communicate with each other by sending me
 
 include::override/verticles.adoc[]
 
-=== Verticle Types
+=== Verticle 类型
 
-There are three different types of verticles:
+Verticle 有三种类型:
 
 Standard Verticles:: These are the most common and useful type - they are always executed using an event loop thread.
 We'll discuss this more in the next section.
@@ -340,12 +335,11 @@ and deadlock so prevalent when doing hand-rolled 'traditional' multi-threaded ap
 [[worker_verticles]]
 === Worker verticles
 
-A worker verticle is just like a standard verticle but it's executed not using an event loop, but using a thread from
-the Vert.x worker thread pool.
+Worker verticle 很像 standard verticle,但是它不使用事件循环,而是使用 Vert.x 的 worker 线程池.
 
-Worker verticles are designed for calling blocking code, as they won't block any event loops.
+Worker verticle 被设计用来调用阻塞代码,它不会阻塞事件循环.
 
-If you don't want to use a worker verticle to run blocking code, you can also run <<blocking_code, inline blocking code>>
+如果你不想用 worker verticle 来运行阻塞代码,你可以If you don't want to use a worker verticle to run blocking code, you can also run <<blocking_code, inline blocking code>>
 directly while on an event loop.
 
 If you want to deploy a verticle as a worker verticle you do that with `link:../../apidocs/io/vertx/core/DeploymentOptions.html#setWorker-boolean-[setWorker]`.
@@ -368,12 +362,12 @@ WARNING: Multi-threaded worker verticles are an advanced feature and most applic
 Because of the concurrency in these verticles you have to be very careful to keep the verticle in a consistent state
 using standard Java techniques for multi-threaded programming.
 
-=== Deploying verticles programmatically
+=== 使用代码部署 verticles
 
 You can deploy a verticle using one of the `link:../../apidocs/io/vertx/core/Vertx.html#deployVerticle-io.vertx.core.Verticle-[deployVerticle]` method, specifying a verticle
 name or you can pass in a verticle instance you have already created yourself.
 
-NOTE: Deploying Verticle *instances* is Java only.
+NOTE: 部署 Verticle *实例* 仅限 Java.
 
 [source,java]
 ----
@@ -381,7 +375,7 @@ Verticle myVerticle = new MyVerticle();
 vertx.deployVerticle(myVerticle);
 ----
 
-You can also deploy verticles by specifying the verticle *name*.
+你也可以通过指定 verticle *名*来进行部署.
 
 The verticle name is used to look up the specific `link:../../apidocs/io/vertx/core/spi/VerticleFactory.html[VerticleFactory]` that will be used to
 instantiate the actual verticle instance(s).
@@ -397,10 +391,10 @@ Here's an example of deploying some different types of verticles:
 ----
 vertx.deployVerticle("com.mycompany.MyOrderProcessorVerticle");
 
-// Deploy a JavaScript verticle
+// 部署 JavaScript verticle
 vertx.deployVerticle("verticles/myverticle.js");
 
-// Deploy a Ruby verticle verticle
+// 部署 Ruby verticle verticle
 vertx.deployVerticle("verticles/my_verticle.rb");
 ----
 
@@ -430,7 +424,7 @@ Most Verticle factories are loaded from the classpath and registered at Vert.x s
 You can also programmatically register and unregister verticle factories using `link:../../apidocs/io/vertx/core/Vertx.html#registerVerticleFactory-io.vertx.core.spi.VerticleFactory-[registerVerticleFactory]`
 and `link:../../apidocs/io/vertx/core/Vertx.html#unregisterVerticleFactory-io.vertx.core.spi.VerticleFactory-[unregisterVerticleFactory]` if you wish.
 
-=== Waiting for deployment to complete
+=== 等待部署完成
 
 Verticle deployment is asynchronous and may complete some time after the call to deploy has returned.
 
@@ -468,7 +462,7 @@ vertx.undeploy(deploymentID, res -> {
 });
 ----
 
-=== Specifying number of verticle instances
+=== 指定 verticle 实例数量
 
 When deploying a verticle using a verticle name, you can specify the number of verticle instances that you
 want to deploy:
@@ -520,7 +514,7 @@ options.setIsolatedClasses(Arrays.asList("com.mycompany.myverticle.*",
 vertx.deployVerticle("com.mycompany.myverticle.VerticleClass", options);
 ----
 
-=== High Availability
+=== 高可用性
 
 Verticles can be deployed with High Availability (HA) enabled. In that context, when a verticle is deployed on
 a vert.x instance that dies abruptly, the verticle is redeployed on another vert.x instance from the cluster.
@@ -538,7 +532,7 @@ More details about the high availability feature and configuration in the <<High
   section.
 
 
-=== Running Verticles from the command line
+=== 从命令行运行 Verticles
 
 You can use Vert.x directly in your Maven or Gradle projects in the normal way by adding a dependency to the Vert.x
 core library and hacking from there.
@@ -584,7 +578,7 @@ down.
 
 This will shut-down all internal thread pools and close other resources, and will allow the JVM to exit.
 
-=== The Context object
+===  Context 对象
 
 When Vert.x provides an event to a handler or calls the start or stop methods of a
 `link:../../apidocs/io/vertx/core/Verticle.html[Verticle]`, the execution is associated with a `Context`. Usually a context is an
@@ -650,7 +644,7 @@ In standard verticles you can't just make the thread sleep to introduce a delay,
 
 Instead you use Vert.x timers. Timers can be *one-shot* or *periodic*. We'll discuss both
 
-==== One-shot Timers
+==== 一次性定时器
 
 A one shot timer calls an event handler after a certain delay, expressed in milliseconds.
 
@@ -667,7 +661,7 @@ System.out.println("First this is printed");
 
 The return value is a unique timer id which can later be used to cancel the timer. The handler is also passed the timer id.
 
-==== Periodic Timers
+==== 周期性定时器
 
 You can also set a timer to fire periodically by using `link:../../apidocs/io/vertx/core/Vertx.html#setPeriodic-long-io.vertx.core.Handler-[setPeriodic]`.
 
@@ -692,9 +686,9 @@ long timerID = vertx.setPeriodic(1000, id -> {
 System.out.println("First this is printed");
 ----
 
-==== Cancelling timers
+==== 取消定时器
 
-To cancel a periodic timer, call `link:../../apidocs/io/vertx/core/Vertx.html#cancelTimer-long-[cancelTimer]` specifying the timer id. For example:
+取消周期性定时器可以通过指定定时器的 ID 调用 `link:../../apidocs/io/vertx/core/Vertx.html#cancelTimer-long-[cancelTimer]`.例如:
 
 [source,java]
 ----
@@ -730,7 +724,7 @@ include::streams.adoc[]
 
 include::parsetools.adoc[]
 
-== Thread safety
+== 线程安全
 
 Most Vert.x objects are safe to access from different threads. _However_ performance is optimised when they are
 accessed from the same context they were created from.
@@ -788,7 +782,7 @@ On Equinox, you may want to disable the `ContextFinder` with the following frame
 `eclipse.bundle.setTCCL=false`
 
 
-== The 'vertx' command line
+== 'vertx' 命令行
 
 The `vertx` command is used to interact with Vert.x from the command line. It's main use is to run Vert.x verticles.
 To do this you need to download and install a Vert.x distribution, and add the `bin` directory of the installation
@@ -796,7 +790,7 @@ to your `PATH` environment variable. Also make sure you have a Java 8 JDK on you
 
 NOTE: The JDK is required to support on the fly compilation of Java code.
 
-=== Run verticles
+=== 运行 verticles
 
 You can run raw Vert.x verticles directly from the command line using `vertx run`. Here is a couple of examples of
 the `run` _command_:
@@ -961,15 +955,16 @@ examples of building applications as fatjars.
 
 A fat jar executes the `run` command, by default.
 
-=== Displaying version of Vert.x
-To display the vert.x version, just launch:
+=== 显示 Vert.x 的版本
+
+为了显示 vert.x 的版本,只要调用:
 
 [source]
 ----
 vertx version
 ----
 
-=== Other commands
+=== 其它命令
 
 The `vertx` command line and the `Launcher` also provide other _commands_ in addition to `run` and `version`:
 
@@ -1021,7 +1016,7 @@ The `start`, `stop` and `list` command are also available from the `vertx` tool.
 
 The set of commands is extensible, refer to the <<Extending the vert.x Launcher>> section.
 
-=== Live Redeploy
+=== 热部署
 
 When developing it may be convenient to automatically redeploy your application upon file changes. The `vertx`
 command line tool and more generally the `link:../../apidocs/io/vertx/core/Launcher.html[Launcher]` class offers this feature. Here are some
@@ -1084,7 +1079,7 @@ The redeploy feature also supports the following settings:
 launching user command). This is useful on Windows, where the process is not killed immediately. The time is given
 in milliseconds. 0 ms by default.
 
-== Cluster Managers
+== 集群管理
 
 In Vert.x a cluster manager is used for various functions including:
 
@@ -1112,7 +1107,7 @@ If you are using Vert.x from a Maven or Gradle project just add the cluster mana
 You can also specify cluster managers programmatically if embedding Vert.x using
 `link:../../apidocs/io/vertx/core/VertxOptions.html#setClusterManager-io.vertx.core.spi.cluster.ClusterManager-[setClusterManager]`.
 
-== Logging
+== 日志
 
 Vert.x logs using it's in-built logging API. The default implementation uses the JDK (JUL) logging so no extra
 logging dependencies are needed.
@@ -1157,13 +1152,13 @@ logger.info("something happened");
 logger.error("oops!", exception);
 ----
 
-== High Availability and Fail-Over
+== 高可用性和故障转移
 
 Vert.x allows you to run your verticles with high availability (HA) support. In that case, when a vert.x
 instance running a verticle dies abruptly, the verticle is migrated to another vertx instance. The vert.x
 instances must be in the same cluster.
 
-=== Automatic failover
+=== 自动故障转移
 
 When vert.x runs with _HA_ enabled, if a vert.x instance where a verticle runs fails or dies, the verticle is
 redeployed automatically on another vert.x instance of the cluster. We call this _verticle fail-over_.
