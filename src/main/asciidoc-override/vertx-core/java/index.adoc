@@ -67,30 +67,27 @@ Vertx vertx = Vertx.vertx(new VertxOptions().setWorkerPoolSize(40));
 `link:../../apidocs/io/vertx/core/VertxOptions.html[VertxOptions]` 对象包含许多选项,包括集群,
  高可用性,线程池大小和其它选项. Javadoc 详细描述了这些选项.
 
-=== Creating a clustered Vert.x object
+=== 创建一个集群的 Vert.x 实例
 
-If you're creating a *clustered Vert.x* (See the section on the <<event_bus, event bus>> for more information
-on clustering the event bus), then you will normally use the asynchronous variant to create the Vertx object.
+如果你要创建一个 *集群 Vert.x* (查看 <<event_bus, 事件总线>> 章节以了解更多有关集群上的事件总线的信息),
+你通常需要使用异步变量来创建 Vertx 对象.
 
-This is because it usually takes some time (maybe a few seconds) for the different Vert.x instances in a cluster to
-group together. During that time, we don't want to block the calling thread, so we give the result to you asynchronously.
+这是因为通常需要一段时间后(可能数秒),集群上的 Vert.x 的实例才能聚集在一起.而这时我们并不想阻塞调用的线程,所以我们异步返回结果.
 
-== Are you fluent?
+== 连续操作
 
-You may have noticed that in the previous examples a *fluent* API was used.
+你可能已经注意到了在前面的例子中使用了 *fluent* API.
 
-A fluent API is where multiple methods calls can be chained together. For example:
+Fluent API 指将多个方法串联在一起.例如:
 
 [source,java]
 ----
 request.response().putHeader("Content-Type", "text/plain").write("some text").end();
 ----
 
-This is a common pattern throughout Vert.x APIs, so get used to it.
+这在 Vert.x APIs 中是非常常见的,所以要习惯它.
 
-Chaining calls like this allows you to write code that's a little bit less verbose. Of course, if you don't
-like the fluent approach *we don't force you* to do it that way, you can happily ignore it if you prefer and write
-your code like this:
+链式调用可以减少一些冗余代码.当然如果你不希望这种方式,*我们不会强迫你*,如果你喜欢下面这种方式你完全可以忽视它:
 
 [source,java]
 ----
@@ -102,7 +99,7 @@ response.end();
 
 == 不要调用我们,我们会调用你.
 
-Vert.x APIs 大都是 _事件驱动_的.这意味着当 Vert.x 发生了某件你感兴趣的事情,Vert.x 会通过向你发送事件来通知你.
+Vert.x APIs 大都是 _事件驱动_ 的.这意味着当 Vert.x 发生了某件你感兴趣的事情,Vert.x 会通过向你发送事件来通知你.
 
 一些事件的示例:
 
@@ -132,41 +129,38 @@ server.requestHandler(request -> {
 });
 ----
 
-Some time later when Vert.x has an event to pass to your handler Vert.x will call it *asynchronously*.
+Vert.x 会在某个时间点后异步向你的 handler 发送事件.
 
-This leads us to some important concepts in Vert.x:
+这带来了一个 Vert.x 中非常重要的概念:
 
 == 不要阻塞我!
 
-With very few exceptions (i.e. some file system operations ending in 'Sync'), none of the APIs in Vert.x block the calling thread.
+除了极少数的例外 (例如:一些同步的文件操作), Vert.x APIs 都不会阻塞调用线程.
 
-If a result can be provided immediately, it will be returned immediately, otherwise you will usually provide a handler
-to receive events some time later.
+能被立即处理的结果会被立即返回.否则的话,你通常需要提供一个 handler 来接收一段时间后发送过来的事件.
 
-Because none of the Vert.x APIs block threads that means you can use Vert.x to handle a lot of concurrency using
-just a small number of threads.
+因为没有 Vert.x APIs 会阻塞线程,所以你可以通过 Vert.x 使用少量线程来处理大量并发.
 
-With a conventional blocking API the calling thread might block when:
+通常当调用以下的 API 时会阻塞调用线程:
 
-* Reading data from a socket
-* Writing data to disk
-* Sending a message to a recipient and waiting for a reply.
-* ... Many other situations
+* 从 socket 读取数据
+* 向磁盘写入数据
+* 向接收者发送消息并且等待回复
+* ... 许多其它情况
 
-In all the above cases, when your thread is waiting for a result it can't do anything else - it's effectively useless.
+在以上所有事例中,当你的线程等待结果时它没有办法做任何其它事 - 这实际上是差劲的.
 
-This means that if you want a lot of concurrency using blocking APIs then you need a lot of threads to prevent your
-application grinding to a halt.
+这意味着如果你希望使用阻塞 API 完成大量并发,你需要使用大量线程来防止你的应用停止响应.
 
-Threads have overhead in terms of the memory they require (e.g. for their stack) and in context switching.
+线程在内存占用和上下文切换时都会产生开销.
 
-For the levels of concurrency required in many modern applications, a blocking approach just doesn't scale.
+对于许多现代应用的并发要求,阻塞实现都是不可扩展的.
 
 == Reactor 和 Multi-Reactor
 
-We mentioned before that Vert.x APIs are event driven - Vert.x passes events to handlers when they are available.
+我们之前提到 Vert.x APIs 是事件驱动的 - Vert.x 在可用的时候会传递事件给 handler.
 
-In most cases Vert.x calls your handlers using a thread called an *event loop*.
+大部分情况,Vert.x 通过使用一个名为 *事件循环* 的线程来调用你的 handler.
 
 As nothing in Vert.x or your application blocks, the event loop can merrily run around delivering events to different handlers in succession
 as they arrive.
